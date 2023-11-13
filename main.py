@@ -82,8 +82,6 @@ async def watch_background():
                 item["price"] = price_today
                 if channel:
                     await channel.send(message)
-                else:
-                    print("Channel: " + channel_id + " not found")
 
 
 # Run the bot
