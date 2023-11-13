@@ -16,9 +16,9 @@ cd "$(dirname "$0")"
 apt-get update
 apt-get install -y python3
 pip3 install -r requirements.txt
-sed -i "s/\(tokenBot=\).*/\1$tokenBot/" $configFile
-sed -i "s/\(guildId=\).*/\1$guildId/" $configFile
-sed -i "s/\(channelId=\).*/\1$channelId/" $configFile
-mv $configFile bot.config
+cp $configFile bot.config
+sed -i "s/\(tokenBot=\).*/\1$tokenBot/" bot.config
+sed -i "s/\(guildId=\).*/\1$guildId/" bot.config
+sed -i "s/\(channelId=\).*/\1$channelId/" bot.config
 chmod +x main.py
 nohup main.py > bot.log &
