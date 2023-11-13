@@ -2,6 +2,33 @@ import requests
 from bs4 import BeautifulSoup
 
 
+def search(search_query):
+    message=""
+    base_url = "https://www.amazon.fr/s"
+    headers = {'User-Agent': 'Mozilla 5.0'}
+    params = {'k': search_query}
+
+    page = requests.get(base_url, headers=headers, params=params)
+
+    if page.status_code != 200:
+        print("Error status code: " + str(page.status_code))
+        return "Not found"
+    
+    soup = BeautifulSoup(page.content, 'html.parser')
+
+    results = soup.find_all(lambda tag: tag.name == 'div' and tag.get('data-asin', '') != '')[:8]
+
+    for i, result in enumerate(results, 1):
+        number = i - 4
+        title = result.find('span', {'class': 'a-text-normal'})
+        price = result.find('span', {'class': 'a-offscreen'})
+        link = result.find('a', {'class': 'a-link-normal'}, href=True)
+
+        if title and price and link:
+            message += f"{number}. {title.text.strip()} - {price.text.strip()}\n"
+    return message
+
+
 def get_price(url):
     headers = {'User-Agent': 'Mozilla 5.0'}
     page = requests.get(url, headers=headers)

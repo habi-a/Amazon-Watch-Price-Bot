@@ -19,13 +19,21 @@ intents.message_content = True
 bot = commands.Bot(command_prefix=commands.when_mentioned_or('/'), intents=intents)
 
 # Commands
+@bot.slash_command(name='amazon_search', description='Effectuer une recherche sur Amazon')
+async def amazon_search(ctx, search_query=None):
+    if search_query is not None:
+        results = search(search_query)
+        await ctx.send(results)
+    else:
+        await ctx.send('Veuillez spécifier une recherche.')
+
 @bot.slash_command(name='amazon_get', description="Récuperer un prix d'un article amazon", guilds_ids=[guildId])
 async def amazon_get(ctx, url=None):
     if url is not None:
         price = get_price(url)
         await ctx.send(f'Le Prix de ton truc de merde: {price}')
     else:
-        await ctx.send('Veuillez spécifier à la fois l\'URL.')
+        await ctx.send('Veuillez spécifier l\'URL.')
 
 @bot.slash_command(name='amazon_watch', description="Définir une alerte sur le prix d'un article amazon", guilds_ids=[guildId])
 async def amazon_watch(ctx, url=None, price=None):
