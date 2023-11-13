@@ -14,3 +14,6 @@ Next add the choosen article to the watch list:
 
 You can always check what articles are in the watch list
 /amazon_watchlist
+
+If you want to remove an article from the watchlist
+/amazon_unwatch
