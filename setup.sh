@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sed -e
+set -e
 
 if [ "$#" -ne 3 ]; then
     echo "Usage: $0 <tokenBot> <guildId> <channelId>"
@@ -21,4 +21,4 @@ sed -i "s/\(tokenBot=\).*/\1$tokenBot/" bot.config
 sed -i "s/\(guildId=\).*/\1$guildId/" bot.config
 sed -i "s/\(channelId=\).*/\1$channelId/" bot.config
 chmod +x main.py
-nohup main.py > bot.log &
+nohup ./main.py > bot.log &
