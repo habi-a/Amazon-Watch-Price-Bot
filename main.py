@@ -11,10 +11,10 @@ from utils import *
 
 # Get Bot Token
 config = configparser.ConfigParser()
-config.read('bot.config')
-token = config.get('general','tokenBot')
-guild_id = config.get('general','guildId')
-channel_id = int(config.get('general','channelId'))
+config.read("bot.config")
+token = config.get("general","tokenBot")
+guild_id = config.get("general","guildId")
+channel_id = int(config.get("general","channelId"))
 
 # Start Client
 intents = discord.Intents.default()
@@ -30,29 +30,39 @@ watch_list = []
 
 
 # Commands
-@bot.slash_command(name='amazon_search', description="Effectuer une recherche sur Amazon", guilds_ids=[guild_id])
+@bot.slash_command(name="amazon_search", description="Effectuer une recherche sur Amazon", guilds_ids=[guild_id])
 async def amazon_search(ctx, search_query=None):
     if search_query is not None:
         results = search(search_query, search_results)
-        await ctx.send(results)
+        await ctx.respond(results)
         return
-    await ctx.send('Veuillez spécifier une recherche.')
+    await ctx.respond("Veuillez spécifier une recherche.")
 
-@bot.slash_command(name='amazon_watchlist', description="Liste les articles en watch", guilds_ids=[guild_id])
+@bot.slash_command(name="amazon_watchlist", description="Affiche la Watchlist", guilds_ids=[guild_id])
 async def amazon_watchlist(ctx):
     message = "Votre Watchlist:\n"
-    for result in watch_list:
-        message += str(result) + "\n"
-    await ctx.send(f'{message}')
+    for i, result in enumerate(watch_list, 1):
+        message += str(i) + " - " + str(result["title"]) + " - " + str(result["price"]) + "\n"
+    await ctx.respond(f'{message}')
 
-@bot.slash_command(name='amazon_watch', description="Surveille un article", guilds_ids=[guild_id])
+@bot.slash_command(name="amazon_watch", description="Ajoute un article à la Watchlist", guilds_ids=[guild_id])
 async def amazon_watch(ctx, choice_number=None):
     index = int(choice_number) - 1
-    if search_results[int(index)] is None :
-        await ctx.send(f'Aucun résultat trouvé pour l\'ID {choice_number}')
+    if search_results[index] is None :
+        await ctx.respond(f'Aucun résultat trouvé pour l\'ID {choice_number}')
         return
     watch_list.append(search_results[index])
-    await ctx.send(f'{search_results[index]["title"]} ajouté à la watchlist')
+    await ctx.respond(f'{search_results[index]["title"]} ajouté à la watchlist')
+
+@bot.slash_command(name="amazon_unwatch", description="Supprime un article de la Watchlist", guilds_ids=[guild_id])
+async def amazon_unwatch(ctx, choice_number=None):
+    index = int(choice_number) - 1
+    if watch_list[index] is None :
+        await ctx.respond(f'Aucun résultat trouvé pour l\'ID {choice_number}')
+        return
+    title_to_remove = watch_list[index]["title"]
+    watch_list.pop(index)
+    await ctx.respond(f'{title_to_remove} retiré de la watchlist')
 
 
 # Monitoring of watchlist

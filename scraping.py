@@ -30,6 +30,7 @@ def search(search_query, search_results):
             message += f"{number}. {title.text.strip()} - {price.text.strip()}\n"
     return message
 
+
 def get_price(url):
     headers = {'User-Agent': 'Mozilla 5.0'}
     page = requests.get(url, headers=headers)
@@ -46,6 +47,7 @@ def get_price(url):
         return "Not found"
     return price_int.get_text() + price_dec.get_text() + '€'
 
+
 def watch_price(url, price):
     headers = {'User-Agent': 'Mozilla 5.0'}
     page = requests.get(url, headers=headers)
@@ -55,7 +57,6 @@ def watch_price(url, price):
         return "Not found"
 
     soup = BeautifulSoup(page.content, "html.parser")
-
     price = soup.find(id="priceblock_ourprice", class_="a-size-medium a-color-price")
 
     return price.get_text()
