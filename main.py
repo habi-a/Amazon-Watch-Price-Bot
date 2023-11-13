@@ -69,8 +69,8 @@ async def amazon_unwatch(ctx, choice_number=None):
 async def watch_background():
     while True:
         await asyncio.sleep(12 * HOUR)
-        message = ""
         for item in watch_list:
+            message = ""
             price_today = get_price(item["link"])
             price_today_float = convert_price_to_number(price_today)
             price_stored_float = convert_price_to_number(item["price"])

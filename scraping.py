@@ -12,25 +12,24 @@ def search(search_query, search_results):
 
     page = requests.get(base_url, headers=headers, params=params)
 
-    # if page.status_code == 301:
-    #     page = requests.get(page.url, headers=headers, params=params)
-    #     if page.status_code != 200:
-    #         return "Not found after redirect " + str(page.status_code)
-    if page.status_code != 200 or page.status_code != 301:
+    if page.status_code != 200 and page.status_code != 301:
         return "Not found " + str(page.status_code)
     
     soup = BeautifulSoup(page.content, "html.parser")
-    results = soup.find_all(lambda tag: tag.name == "div" and tag.get("data-asin", '') != "" and not "AdHolder" in tag.get("class", ""))[:8]
+    results = soup.find_all(lambda tag: tag.name == "div" and tag.get("data-asin", '') != "" and not "AdHolder" in tag.get("class", ""))[:15]
 
-    for i, result in enumerate(results, 1):
-        number = i - 4
+    number = 1
+    for result in results:
         title = result.find("span", {"class": "a-text-normal"})
         price = result.find("span", {"class": "a-offscreen"})
         link = result.find('a', {"class": "a-link-normal"}, href=True)
 
         if title and price and link:
             search_results.append({"title": title.text.strip(), "price": price.text.strip(), "link": AMAZON_BASE_URL + link['href']})
-            message += f"{number}. {title.text.strip()} - {price.text.strip()}\n"
+            message += str(number) + ". " + title.text.strip() + " - " + price.text.strip() + "\n"
+            number += 1
+        if number > 5:
+            break
     return message
 
 
@@ -38,11 +37,7 @@ def get_price(url):
     headers = {'User-Agent': 'Mozilla 5.0'}
     page = requests.get(url, headers=headers)
 
-    # if page.status_code == 301:
-    #     page = requests.get(page.url, headers=headers)
-    #     if page.status_code != 200:
-    #         return "Not found after redirect " + str(page.status_code)
-    if page.status_code != 200 or page.status_code != 301:
+    if page.status_code != 200 and page.status_code != 301:
         return "Not found " + str(page.status_code)
 
     soup = BeautifulSoup(page.content, "html.parser")
