@@ -1,21 +1,44 @@
 import requests
 from bs4 import BeautifulSoup
-
+from pyppeteer import launch
 
 AMAZON_BASE_URL="https://www.amazon.fr"
 
-def search(search_query, search_results):
-    message=""
+async def search(search_query, search_results):
     base_url = AMAZON_BASE_URL + "/s"
-    headers = {"User-Agent": "Mozilla 5.0"}
-    params = {"k": search_query}
 
-    page = requests.get(base_url, headers=headers, params=params)
+    try:
+        browser = await launch()
+        page = await browser.newPage()
 
-    if page.status_code != 200 and page.status_code != 301:
-        return "Not found " + str(page.status_code)
+        await page.setExtraHTTPHeaders({
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7'
+        })
+
+        await page.goto(f'{base_url}?k={search_query}')
+
+        await page.waitForSelector(".s-main-slot")
+
+        content = await page.content()
+
+        await browser.close()
+    except Exception as e:
+        print(f"Error occured when requesting page : {e}")
+        return None
+
+
+    # message=""
+    # base_url = AMAZON_BASE_URL + "/s"
+    # headers = {"User-Agent": "Mozilla 5.0"}
+    # params = {"k": search_query}
+
+    # page = requests.get(base_url, headers=headers, params=params)
+
+    # if page.status_code != 200 and page.status_code != 301:
+    #     return "Not found " + str(page.status_code)
     
-    soup = BeautifulSoup(page.content, "html.parser")
+    soup = BeautifulSoup(content, "html.parser")
     results = soup.find_all(lambda tag: tag.name == "div" and tag.get("data-asin", '') != "" and not "AdHolder" in tag.get("class", ""))[:15]
 
     number = 1
