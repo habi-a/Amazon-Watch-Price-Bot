@@ -8,7 +8,7 @@ async def search(search_query, search_results):
     base_url = AMAZON_BASE_URL + "/s"
 
     try:
-        browser = await launch()
+        browser = await launch(options={'args': ['--no-sandbox']})
         page = await browser.newPage()
 
         await page.setExtraHTTPHeaders({
