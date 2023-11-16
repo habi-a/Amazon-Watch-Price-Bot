@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
-import asyncio
+import configparser
 import discord
 from discord.ext import commands
-import configparser
 
-from scraping import *
-from utils import *
+from amazon import search
+from watch import watch_background
 
 
 # Get Bot Token
@@ -65,30 +64,11 @@ async def amazon_unwatch(ctx, choice_number=None):
     await ctx.respond(f'{title_to_remove} retiré de la watchlist')
 
 
-# Monitoring of watchlist
-async def watch_background():
-    while True:
-        await asyncio.sleep(12 * HOUR)
-        for item in watch_list:
-            message = ""
-            price_today = get_price(item["link"])
-            price_today_float = convert_price_to_number(price_today)
-            price_stored_float = convert_price_to_number(item["price"])
-            
-            if (price_today_float != price_stored_float):
-                channel = bot.get_channel(channel_id)
-                message = "Price for: " + item["title"] + " has changed\n"
-                message += "Old price: " + item["price"] + "\t New price: " + price_today
-                item["price"] = price_today
-                if channel:
-                    await channel.send(message)
-
-
 # Run the bot
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user.name}')
-    bot.loop.create_task(watch_background())
+    bot.loop.create_task(watch_background(bot, watch_list, channel_id))
     await bot.sync_commands()
 
 bot.run(token)

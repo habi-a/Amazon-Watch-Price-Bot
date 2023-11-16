@@ -1,4 +1,4 @@
 bs4
+faker
 py-cord
-pyppeteer
 requests
