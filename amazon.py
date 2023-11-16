@@ -11,6 +11,8 @@ def search(search_query, search_results):
     soup = get_page(base_url, params)
     results = soup.find_all(lambda tag: tag.name == "div" and tag.get("data-asin", '') != "" and not "AdHolder" in tag.get("class", ""))[:15]
 
+    print(soup)
+    print(result)
     number = 1
     for result in results:
         title = result.find("span", {"class": "a-text-normal"})
