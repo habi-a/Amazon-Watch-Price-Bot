@@ -31,7 +31,7 @@ async def search(search_query, search_results):
         print(f"Error occured when requesting page : {e}")
         return None
 
-
+    print(content)
     message=""
     # base_url = AMAZON_BASE_URL + "/s"
     # headers = {"User-Agent": "Mozilla 5.0"}
@@ -45,6 +45,7 @@ async def search(search_query, search_results):
     soup = BeautifulSoup(content, "html.parser")
     results = soup.find_all(lambda tag: tag.name == "div" and tag.get("data-asin", '') != "" and not "AdHolder" in tag.get("class", ""))[:15]
 
+    print(results)
     number = 1
     for result in results:
         title = result.find("span", {"class": "a-text-normal"})
