@@ -32,7 +32,7 @@ async def search(search_query, search_results):
         return None
 
 
-    # message=""
+    message=""
     # base_url = AMAZON_BASE_URL + "/s"
     # headers = {"User-Agent": "Mozilla 5.0"}
     # params = {"k": search_query}
