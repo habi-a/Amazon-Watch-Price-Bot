@@ -1,13 +1,16 @@
 # Amazon-Watch-Price-Bot
-## Discord Bot for watching Amazon price products in python
 
-### Setup 
+## Setup 
 
+### Add bot to your discord server  
+https://discord.com/api/oauth2/authorize?client_id=1173365701709398047&permissions=534723951696&scope=bot  
+
+### Run the bot server side
 Install and run on Debian/Ubuntu by running setup.sh with the following synthax:  
 ```./setup.sh <tokenBot> <guildId> <channelId>```  
 NOTE: You can install on differents plateform by replacing in the script aptitude instructions by the right package manager
 
-### Usage
+#### Usage
 First search the product you want to monitore:  
 ```/amazon_search```  
 It will return the 5 firsts results in the Amazon search page
