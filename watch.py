@@ -12,7 +12,7 @@ async def watch_background(bot, watch_list, channel_id):
             price_today = get_price(item["link"])
             price_today_float = convert_price_to_number(price_today)
             price_stored_float = convert_price_to_number(item["price"])
-            
+
             if (price_today_float != price_stored_float):
                 channel = bot.get_channel(channel_id)
                 message = "Price for: " + item["title"] + " has changed\n"

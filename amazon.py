@@ -9,10 +9,8 @@ def search(search_query, search_results):
     params = {"k": search_query}
 
     soup = get_page(base_url, params)
-    results = soup.find_all(lambda tag: tag.name == "div" and tag.get("data-asin", '') != "" and not "AdHolder" in tag.get("class", ""))[:15]
+    results = soup.find_all(lambda tag: tag.name == "div" and tag.get("data-asin", '') != "" and not "AdHolder" in tag.get("class", ""))[:30]
 
-    print(soup)
-    print(result)
     number = 1
     for result in results:
         title = result.find("span", {"class": "a-text-normal"})
@@ -34,5 +32,5 @@ def get_price(url):
     price_dec = soup.find(class_="a-price-fraction")
 
     if price_int is None or price_dec is None:
-        return "Price not found "
+        return "Price not found"
     return price_int.get_text() + price_dec.get_text() + '€'

@@ -32,6 +32,7 @@ watch_list = []
 @bot.slash_command(name="amazon_search", description="Effectuer une recherche sur Amazon", guilds_ids=[guild_id])
 async def amazon_search(ctx, search_query=None):
     if search_query is not None:
+        await ctx.defer()
         results = search(search_query, search_results)
         await ctx.respond(results)
         return

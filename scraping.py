@@ -23,4 +23,3 @@ def get_page(url, params={}):
         else:
             print('Bot bypassed')
             return soup
-
