@@ -1,6 +1,10 @@
+import asyncio
 import requests
 from bs4 import BeautifulSoup
 from pyppeteer import launch
+
+from utils import *
+
 
 AMAZON_BASE_URL="https://www.amazon.fr"
 
@@ -8,7 +12,7 @@ async def search(search_query, search_results):
     base_url = AMAZON_BASE_URL + "/s"
 
     try:
-        browser = await launch(options={'args': ['--no-sandbox']})
+        browser = await launch(options={'args': ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']})
         page = await browser.newPage()
 
         await page.setExtraHTTPHeaders({
@@ -16,9 +20,9 @@ async def search(search_query, search_results):
             'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7'
         })
 
-        await page.goto(f'{base_url}?k={search_query}')
+        await page.goto(f'{base_url}?k={search_query}', waitUntil='domcontentloaded')
 
-        await page.waitForSelector(".s-main-slot")
+        await asyncio.sleep(2 * SECOND)
 
         content = await page.content()
 

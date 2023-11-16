@@ -1,3 +1,4 @@
 bs4
 py-cord
+pyppeteer
 requests
