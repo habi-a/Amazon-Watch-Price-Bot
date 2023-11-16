@@ -14,7 +14,7 @@ configFile="bot.config.example"
 
 cd "$(dirname "$0")"
 apt-get update
-apt-get install -y python3 python3-pip curl
+apt-get install -y python3 python3-pip curl supervisor
 pip3 install -r requirements.txt
 cp $configFile bot.config
 sed -i "s/\(tokenBot=\).*/\1$tokenBot/" bot.config
