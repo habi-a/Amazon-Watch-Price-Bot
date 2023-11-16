@@ -17,15 +17,13 @@ user_agent_list = [
 ]
 
 def get_page(url, params={}):
-    user_agent = user_agent_list[0]
+    isCaptcha = True
+    i = 0
     headers = {
-        'User-Agent': user_agent,
+        'User-Agent': user_agent_list[i],
         'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7'
     }
-
-    i = 0
-    isCaptcha = True
-    ua_number = len(user_agent)
+    ua_number = len(user_agent_list)
     while isCaptcha:
         page = requests.get(url, headers=headers, params=params)
         soup = BeautifulSoup(page.content, "html.parser")
@@ -33,8 +31,8 @@ def get_page(url, params={}):
             i += 1
             if i >= ua_number:
                 break
-            user_agent = user_agent_list[i]
-            print(f'\rBot has been detected... retrying ... use new identity: {user_agent} ', end='', flush=True)
+            headers['User-Agent'] = user_agent_list[i]
+            print(f'\rBot has been detected... retrying ... use new identity: {i} ', end='', flush=True)
             continue
         else:
             print('Bot bypassed i:' + str(i))
