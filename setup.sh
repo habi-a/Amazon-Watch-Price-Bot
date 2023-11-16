@@ -21,4 +21,5 @@ sed -i "s/\(tokenBot=\).*/\1$tokenBot/" bot.config
 sed -i "s/\(guildId=\).*/\1$guildId/" bot.config
 sed -i "s/\(channelId=\).*/\1$channelId/" bot.config
 chmod +x main.py
+mkdir /var/log/supervisord/
 supervisord -c supervisord.conf
