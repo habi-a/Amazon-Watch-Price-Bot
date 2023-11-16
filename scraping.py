@@ -23,17 +23,21 @@ def get_page(url, params={}):
         'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7'
     }
 
-    i = 1
+    i = 0
     isCaptcha = True
-    while isCaptcha and i < len(user_agent):
+    ua_number = len(user_agent)
+    while isCaptcha:
         page = requests.get(url, headers=headers, params=params)
         soup = BeautifulSoup(page.content, "html.parser")
         if 'To discuss automated access to Amazon data' in str(soup) or 'captcha' in str(soup):
+            i += 1
+            if i >= ua_number:
+                break
             user_agent = user_agent_list[i]
             print(f'\rBot has been detected... retrying ... use new identity: {user_agent} ', end='', flush=True)
             continue
         else:
-            print('Bot bypassed')
+            print('Bot bypassed i:' + str(i))
             return soup
     print('No User Agent working found')
     return ""
