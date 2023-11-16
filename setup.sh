@@ -14,11 +14,11 @@ configFile="bot.config.example"
 
 cd "$(dirname "$0")"
 apt-get update
-apt-get install -y python3 python3-pip
+apt-get install -y python3 python3-pip curl
 pip3 install -r requirements.txt
 cp $configFile bot.config
 sed -i "s/\(tokenBot=\).*/\1$tokenBot/" bot.config
 sed -i "s/\(guildId=\).*/\1$guildId/" bot.config
 sed -i "s/\(channelId=\).*/\1$channelId/" bot.config
 chmod +x main.py
-nohup ./main.py > bot.log &
+supervisord -c supervisord.conf
