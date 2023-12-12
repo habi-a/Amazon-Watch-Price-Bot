@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import configparser
+import os
 import discord
 from discord.ext import commands
 
@@ -10,7 +11,7 @@ from watch import watch_background
 
 # Get Bot Token
 config = configparser.ConfigParser()
-config.read("bot.config")
+config.read(os.path.join(os.path.dirname(__file__), "bot.config"))
 token = config.get("general","tokenBot")
 guild_id = config.get("general","guildId")
 channel_id = int(config.get("general","channelId"))
