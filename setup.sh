@@ -22,4 +22,4 @@ sed -i "s/\(tokenBot=\).*/\1$tokenBot/" bot.config
 sed -i "s/\(guildId=\).*/\1$guildId/" bot.config
 sed -i "s/\(channelId=\).*/\1$channelId/" bot.config
 chmod +x main.py
-pm2 start /app/Amazon-Watch-Price-Bot/main.py
+pm2 start "/usr/bin/python3 /app/Amazon-Watch-Price-Bot/main.py" 
