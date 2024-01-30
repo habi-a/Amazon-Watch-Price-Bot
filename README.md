@@ -14,10 +14,10 @@ First search the product you want to monitore:
 ```/amazon_search```  
 It will return the 5 firsts results in the Amazon search page
 
-Next add the choosen article to the watch list:  
+Next add the choosen article to the watchlist:  
 ```/amazon_watch```  
 
-You can always check what articles are in the watch list  
+You can always check what articles are in the watchlist  
 ```/amazon_watchlist```  
 
 If you want to remove an article from the watchlist  
