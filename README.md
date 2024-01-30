@@ -8,7 +8,6 @@ https://discord.com/api/oauth2/authorize?client_id=1173365701709398047&permissio
 ### Run the bot server side
 Install and run on Debian/Ubuntu by running setup.sh with the following synthax:  
 ```./setup.sh <tokenBot> <guildId> <channelId>```  
-NOTE: You can install on differents plateform by replacing in the script aptitude instructions by the right package manager
 
 #### Usage
 First search the product you want to monitore:  
