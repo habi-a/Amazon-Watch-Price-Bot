@@ -3,7 +3,7 @@
 set -e
 
 if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 <tokenBot> <guildId> <channelId>"
+    echo "Usage: $0 <tokenBot>"
     exit 1
 fi
 
@@ -15,8 +15,6 @@ configFile="bot.config.example"
 cd "$(dirname "$0")"
 cp "$configFile" bot.config
 sed -i "s/\(tokenBot=\).*/\1$tokenBot/" bot.config
-sed -i "s/\(guildId=\).*/\1$guildId/" bot.config
-sed -i "s/\(channelId=\).*/\1$channelId/" bot.config
 
 sudo apt-get update
 sudo apt-get install -y python3 python3-pip curl nodejs npm gcc g++ make
