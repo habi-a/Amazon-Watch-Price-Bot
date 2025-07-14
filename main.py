@@ -13,8 +13,6 @@ from watch import watch_background
 config = configparser.ConfigParser()
 config.read(os.path.join(os.path.dirname(__file__), "bot.config"))
 token = config.get("general","tokenBot")
-guild_id = config.get("general","guildId")
-channel_id = int(config.get("general","channelId"))
 
 # Start Client
 intents = discord.Intents.default()
@@ -32,10 +30,9 @@ watch_list = []
 # Commands
 @bot.slash_command(name="wp_hello", description="Faire un hello world")
 async def wp_hello(ctx):
-    message = "Hello world\n"
-    await ctx.respond(f'{message}')
+    await ctx.respond("Hello world")
 
-@bot.slash_command(name="wp_search", description="Effectuer une recherche sur Amazon", guilds_ids=[guild_id])
+@bot.slash_command(name="wp_search", description="Effectuer une recherche sur Amazon")
 async def wp_search(ctx, search_query=None):
     if search_query is not None:
         await ctx.defer()
@@ -44,14 +41,14 @@ async def wp_search(ctx, search_query=None):
         return
     await ctx.respond("Veuillez spécifier une recherche.")
 
-@bot.slash_command(name="wp_watchlist", description="Affiche la Watchlist", guilds_ids=[guild_id])
+@bot.slash_command(name="wp_watchlist", description="Affiche la Watchlist")
 async def wp_watchlist(ctx):
     message = "Votre Watchlist:\n"
     for i, result in enumerate(watch_list, 1):
         message += str(i) + " - " + str(result["title"]) + " - " + str(result["price"]) + "\n"
     await ctx.respond(f'{message}')
 
-@bot.slash_command(name="wp_watch", description="Ajoute un article à la Watchlist", guilds_ids=[guild_id])
+@bot.slash_command(name="wp_watch", description="Ajoute un article à la Watchlist")
 async def wp_watch(ctx, choice_number=None):
     index = int(choice_number) - 1
     if search_results[index] is None :
@@ -60,7 +57,7 @@ async def wp_watch(ctx, choice_number=None):
     watch_list.append(search_results[index])
     await ctx.respond(f'{search_results[index]["title"]} ajouté à la watchlist')
 
-@bot.slash_command(name="wp_unwatch", description="Supprime un article de la Watchlist", guilds_ids=[guild_id])
+@bot.slash_command(name="wp_unwatch", description="Supprime un article de la Watchlist")
 async def wp_unwatch(ctx, choice_number=None):
     index = int(choice_number) - 1
     if watch_list[index] is None :
@@ -70,12 +67,8 @@ async def wp_unwatch(ctx, choice_number=None):
     watch_list.pop(index)
     await ctx.respond(f'{title_to_remove} retiré de la watchlist')
 
-
-# Run the bot
 @bot.event
 async def on_ready():
-    print(f'Logged in as {bot.user.name}')
-    bot.loop.create_task(watch_background(bot, watch_list, channel_id))
-    await bot.sync_commands()
+    print(f"{bot.user} is ready and online!")
 
 bot.run(token)
