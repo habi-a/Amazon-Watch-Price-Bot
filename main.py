@@ -39,7 +39,6 @@ async def wp_search(ctx, search_query=None):
         return 
     await ctx.defer()
     message, search_results[ctx.user.id] = search(search_query)
-    await ctx.respond(results)
     if not results:
         await ctx.respond("Aucun résultat trouvé.")
     else:
