@@ -24,7 +24,7 @@ bot = commands.Bot(command_prefix=('/'), intents=intents)
 
 # Dict for storing results
 search_results = []
-watch_list = []
+watch_list = {}
 
 
 # Commands
@@ -43,32 +43,39 @@ async def wp_search(ctx, search_query=None):
 
 @bot.slash_command(name="wp_watchlist", description="Affiche la Watchlist")
 async def wp_watchlist(ctx):
-    message = "Votre Watchlist:\n"
-    for i, result in enumerate(watch_list, 1):
-        message += str(i) + " - " + str(result["title"]) + " - " + str(result["price"]) + "\n"
-    await ctx.respond(f'{message}')
+    user_list = watch_list.get(ctx.user.id, [])
+    if not user_list:
+        await ctx.respond("Votre Watchlist est vide.")
+        return
+    message = "Votre Watchlist :\n"
+    for i, item in enumerate(user_list, 1):
+        message += f"{i}. {item['title']} - {item['price']}\n"
+    await ctx.respond(message)
+
 
 @bot.slash_command(name="wp_watch", description="Ajoute un article à la Watchlist")
 async def wp_watch(ctx, choice_number=None):
-    index = int(choice_number) - 1
-    if search_results[index] is None :
-        await ctx.respond(f'Aucun résultat trouvé pour l\'ID {choice_number}')
+    user_id = ctx.user.id
+    index = choice_number - 1
+    if index < 0 or index >= len(search_results) or search_results[index] is None:
+        await ctx.respond("Numéro invalide.")
         return
-    watch_list.append({
-        **search_results[index],
-        "user_id": ctx.user.id
-    })
-    await ctx.respond(f'{search_results[index]["title"]} ajouté à ta watchlist')
+    article = search_results[index].copy()
+    article["user_id"] = user_id
+    if user_id not in watch_list:
+        watch_list[user_id] = []
+    watch_list[user_id].append(article)
+    await ctx.respond(f'{article["title"]} ajouté à votre Watchlist')
 
 @bot.slash_command(name="wp_unwatch", description="Supprime un article de la Watchlist")
 async def wp_unwatch(ctx, choice_number=None):
-    index = int(choice_number) - 1
-    if watch_list[index] is None :
-        await ctx.respond(f'Aucun résultat trouvé pour l\'ID {choice_number}')
+    user_list = watch_list.get(ctx.user.id, [])
+    index = choice_number - 1
+    if index < 0 or index >= len(user_list):
+        await ctx.respond("Numéro invalide.")
         return
-    title_to_remove = watch_list[index]["title"]
-    watch_list.pop(index)
-    await ctx.respond(f'{title_to_remove} retiré de la watchlist')
+    removed = user_list.pop(index)
+    await ctx.respond(f'{removed["title"]} a été retiré de votre Watchlist')
 
 @bot.event
 async def on_ready():
