@@ -19,5 +19,5 @@ async def watch_background(bot, watch_list):
                 user = bot.get_user(item["user_id"])
                 if user:
                     await user.send(message)
-                else
+                else:
                     print("no user found to send alert")
