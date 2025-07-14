@@ -2,14 +2,12 @@
 
 set -e
 
-if [ "$#" -ne 3 ]; then
+if [ "$#" -ne 1 ]; then
     echo "Usage: $0 <tokenBot>"
     exit 1
 fi
 
 tokenBot="$1"
-guildId="$2"
-channelId="$3"
 configFile="bot.config.example"
 
 cd "$(dirname "$0")"
