@@ -54,8 +54,11 @@ async def wp_watch(ctx, choice_number=None):
     if search_results[index] is None :
         await ctx.respond(f'Aucun résultat trouvé pour l\'ID {choice_number}')
         return
-    watch_list.append(search_results[index])
-    await ctx.respond(f'{search_results[index]["title"]} ajouté à la watchlist')
+    watch_list.append({
+        **search_results[index],
+        "user_id": ctx.user.id
+    })
+    await ctx.respond(f'{search_results[index]["title"]} ajouté à ta watchlist')
 
 @bot.slash_command(name="wp_unwatch", description="Supprime un article de la Watchlist")
 async def wp_unwatch(ctx, choice_number=None):
@@ -70,5 +73,7 @@ async def wp_unwatch(ctx, choice_number=None):
 @bot.event
 async def on_ready():
     print(f"{bot.user} is ready and online!")
+    bot.loop.create_task(watch_background(bot, watch_list))
+    await bot.sync_commands()
 
 bot.run(token)
