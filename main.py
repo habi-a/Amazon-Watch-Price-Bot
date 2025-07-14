@@ -34,12 +34,16 @@ async def wp_hello(ctx):
 
 @bot.slash_command(name="wp_search", description="Effectuer une recherche sur Amazon")
 async def wp_search(ctx, search_query=None):
-    if search_query is not None:
-        await ctx.defer()
-        search_results[ctx.user.id] = search(search_query)
-        await ctx.respond(results)
-        return
-    await ctx.respond("Veuillez spécifier une recherche.")
+    if not search_query:
+        await ctx.respond("Veuillez spécifier une recherche.")
+        return 
+    await ctx.defer()
+    message, search_results[ctx.user.id] = search(search_query)
+    await ctx.respond(results)
+     if not results:
+        await ctx.respond("Aucun résultat trouvé.")
+    else:
+        await ctx.respond(message)
 
 @bot.slash_command(name="wp_watchlist", description="Affiche la Watchlist")
 async def wp_watchlist(ctx):
