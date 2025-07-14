@@ -5,6 +5,7 @@ AMAZON_BASE_URL="https://www.amazon.fr"
 
 def search(search_query, search_results):
     message=""
+    results_list = []
     base_url = AMAZON_BASE_URL + "/s"
     params = {"k": search_query}
 
@@ -18,12 +19,17 @@ def search(search_query, search_results):
         link = result.find('a', {"class": "a-link-normal"}, href=True)
 
         if title and price and link:
-            search_results.append({"title": title.text.strip(), "price": price.text.strip(), "link": AMAZON_BASE_URL + link['href']})
+            item = {
+                "title": title.text.strip(),
+                "price": price.text.strip(),
+                "link": AMAZON_BASE_URL + link['href']
+            }
+            results_list.append(item)
             message += str(number) + ". " + title.text.strip() + " - " + price.text.strip() + "\n"
             number += 1
         if number > 5:
             break
-    return message
+    return message, results_list
 
 
 def get_price(url):
