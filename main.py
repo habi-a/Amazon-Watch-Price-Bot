@@ -38,11 +38,12 @@ async def wp_search(ctx, search_query=None):
         await ctx.respond("Veuillez spécifier une recherche.")
         return 
     await ctx.defer()
-    message, search_results[ctx.user.id] = search(search_query)
+    message, results = search(search_query)
     if not results:
         await ctx.respond("Aucun résultat trouvé.")
-    else:
-        await ctx.respond(message)
+        return
+    search_results[ctx.user.id] = results
+    await ctx.respond(message)
 
 @bot.slash_command(name="wp_watchlist", description="Affiche la Watchlist")
 async def wp_watchlist(ctx):
