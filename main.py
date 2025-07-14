@@ -23,7 +23,7 @@ intents.guilds = True
 bot = commands.Bot(command_prefix=('/'), intents=intents)
 
 # Dict for storing results
-search_results = []
+search_results = {}
 watch_list = {}
 
 
@@ -36,7 +36,7 @@ async def wp_hello(ctx):
 async def wp_search(ctx, search_query=None):
     if search_query is not None:
         await ctx.defer()
-        results = search(search_query, search_results)
+        search_results[ctx.user.id] = search(search_query)
         await ctx.respond(results)
         return
     await ctx.respond("Veuillez spécifier une recherche.")
@@ -57,10 +57,11 @@ async def wp_watchlist(ctx):
 async def wp_watch(ctx, choice_number=None):
     user_id = ctx.user.id
     index = choice_number - 1
-    if index < 0 or index >= len(search_results) or search_results[index] is None:
-        await ctx.respond("Numéro invalide.")
+    user_search = search_results.get(user_id, [])
+    if index < 0 or index >= len(user_search) or user_search[index] is None:
+        await ctx.respond("Numéro invalide ou aucune recherche récente.")
         return
-    article = search_results[index].copy()
+    article = user_search[index].copy()
     article["user_id"] = user_id
     if user_id not in watch_list:
         watch_list[user_id] = []
