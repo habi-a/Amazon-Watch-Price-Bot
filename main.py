@@ -30,9 +30,9 @@ watch_list = []
 
 
 # Commands
-@bot.slash_command(name="hello_world", description="Faire un hello world", guilds_ids=[guild_id])
-async def amazon_search(ctx):
-    message = "Hello world\n"
+@bot.slash_command(name="hello", description="Faire un hello world", guilds_ids=[guild_id])
+async def amazon_hello(ctx):
+    message = "Hello world Prodige the big boss\n"
     await ctx.respond(f'{message}')
 
 @bot.slash_command(name="amazon_search", description="Effectuer une recherche sur Amazon", guilds_ids=[guild_id])
