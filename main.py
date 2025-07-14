@@ -60,7 +60,11 @@ async def wp_watchlist(ctx):
 @bot.slash_command(name="wp_watch", description="Ajoute un article à la Watchlist")
 async def wp_watch(ctx, choice_number=None):
     user_id = ctx.user.id
-    index = choice_number - 1
+    try:
+        index = int(choice_number) - 1
+    except (ValueError, TypeError):
+        await ctx.respond("Merci d'entrer un numéro valide.")
+        return
     user_search = search_results.get(user_id, [])
     if index < 0 or index >= len(user_search) or user_search[index] is None:
         await ctx.respond("Numéro invalide ou aucune recherche récente.")
@@ -75,7 +79,11 @@ async def wp_watch(ctx, choice_number=None):
 @bot.slash_command(name="wp_unwatch", description="Supprime un article de la Watchlist")
 async def wp_unwatch(ctx, choice_number=None):
     user_list = watch_list.get(ctx.user.id, [])
-    index = choice_number - 1
+    try:
+        index = int(choice_number) - 1
+    except (ValueError, TypeError):
+        await ctx.respond("Merci d'entrer un numéro valide.")
+        return
     if index < 0 or index >= len(user_list):
         await ctx.respond("Numéro invalide.")
         return
