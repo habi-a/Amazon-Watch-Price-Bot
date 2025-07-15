@@ -13,11 +13,12 @@ async def watch_background(bot, watch_list):
                 price_stored_float = convert_price_to_number(item["price"])
                 if price_today_float != price_stored_float:
                     item["price"] = price_today
-                    try:
+                    user = await bot.fetch_user(item["user_id"])
+                    if user:
                         await user.send(
                             f"Prix modifié pour **{item['title']}**\n"
                             f"Ancien prix : {item['price']}\n"
                             f"Nouveau prix : {price_today}"
                         )
-                    except discord.Forbidden:
-                        print(f"Impossible d'envoyer un DM à {user_id}")
+                    else:
+                        print(f"Impossible d’envoyer un message à l’utilisateur {item.get('user_id')}")
