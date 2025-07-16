@@ -7,7 +7,7 @@ config_file = configparser.ConfigParser()
 config_file.read(os.path.join(os.path.dirname(__file__), "bot.config"))
 
 mongo_uri            = config_file.get("general","mongo_uri")
-client               = MongoClient(MONGO_URI)
+client               = MongoClient(mongo_uri)
 db                   = client["watch_price_bot"]
 watchlist_collection = db["watchlist"]
 
