@@ -5,9 +5,9 @@ import os
 import discord
 from discord.ext import commands
 
-from amazon import search
+from amazon import search_in_amazon
 from watch import watch_background
-
+from db import add_to_watchlist, get_watchlist, remove_from_watchlist
 
 # Get Bot Token
 config = configparser.ConfigParser()
@@ -38,7 +38,7 @@ async def wp_search(ctx, search_query=None):
         await ctx.respond("Veuillez spécifier une recherche.")
         return 
     await ctx.defer()
-    message, results = search(search_query)
+    message, results = search_in_amazon(search_query)
     if not results:
         await ctx.respond("Aucun résultat trouvé.")
         return
@@ -47,48 +47,45 @@ async def wp_search(ctx, search_query=None):
 
 @bot.slash_command(name="wp_watchlist", description="Affiche la Watchlist")
 async def wp_watchlist(ctx):
-    user_list = watch_list.get(ctx.user.id, [])
-    if not user_list:
-        await ctx.respond("Votre Watchlist est vide.")
+    items = get_watchlist(ctx.user.id)
+    if not items:
+        await ctx.respond("Votre watchlist est vide.")
         return
-    message = "Votre Watchlist :\n"
-    for i, item in enumerate(user_list, 1):
+    message = "📦 Votre Watchlist :\n"
+    for i, item in enumerate(items, 1):
         message += f"{i}. {item['title']} - {item['price']}\n"
     await ctx.respond(message)
 
 
-@bot.slash_command(name="wp_watch", description="Ajoute un article à la Watchlist")
-async def wp_watch(ctx, choice_number=None):
-    user_id = ctx.user.id
-    try:
-        index = int(choice_number) - 1
-    except (ValueError, TypeError):
-        await ctx.respond("Merci d'entrer un numéro valide.")
-        return
-    user_search = search_results.get(user_id, [])
-    if index < 0 or index >= len(user_search) or user_search[index] is None:
-        await ctx.respond("Numéro invalide ou aucune recherche récente.")
-        return
-    article = user_search[index].copy()
-    article["user_id"] = user_id
-    if user_id not in watch_list:
-        watch_list[user_id] = []
-    watch_list[user_id].append(article)
-    await ctx.respond(f'{article["title"]} ajouté à votre Watchlist')
 
-@bot.slash_command(name="wp_unwatch", description="Supprime un article de la Watchlist")
-async def wp_unwatch(ctx, choice_number=None):
-    user_list = watch_list.get(ctx.user.id, [])
-    try:
-        index = int(choice_number) - 1
-    except (ValueError, TypeError):
-        await ctx.respond("Merci d'entrer un numéro valide.")
+@bot.slash_command(name="wp_watch", description="Ajoute un article à la Watchlist")
+async def wp_watch(ctx, choice_number: int = None):
+    if choice_number is None:
+        await ctx.respond("Merci de préciser un numéro.")
         return
-    if index < 0 or index >= len(user_list):
+
+    index = choice_number - 1
+    results = search_results.get(ctx.user.id, [])
+    if index < 0 or index >= len(results):
         await ctx.respond("Numéro invalide.")
         return
-    removed = user_list.pop(index)
-    await ctx.respond(f'{removed["title"]} a été retiré de votre Watchlist')
+
+    item = results[index]
+    item["user_id"] = ctx.user.id
+    add_to_watchlist(ctx.user.id, item)
+    await ctx.respond(f"{item['title']} ajouté à votre liste de suivi.")
+
+@bot.slash_command(name="wp_unwatch", description="Supprime un article de la Watchlist")
+async def wp_unwatch(ctx, choice_number: int = None):
+    if choice_number is None:
+        await ctx.respond("Merci de préciser un numéro.")
+        return
+    index = choice_number - 1
+    removed = remove_from_watchlist(ctx.user.id, index)
+    if removed:
+        await ctx.respond(f"{removed['title']} a été retiré de votre watchlist.")
+    else:
+        await ctx.respond("Numéro invalide.")
 
 @bot.event
 async def on_ready():

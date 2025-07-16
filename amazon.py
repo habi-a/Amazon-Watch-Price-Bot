@@ -3,7 +3,7 @@ from scraping import get_page
 AMAZON_BASE_URL="https://www.amazon.fr"
 
 
-def search(search_query):
+def search_in_amazon(search_query):
     message = ""
     results_list = []
 

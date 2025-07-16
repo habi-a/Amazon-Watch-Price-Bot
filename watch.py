@@ -2,11 +2,14 @@ import asyncio
 
 from amazon import get_price
 from utils import convert_price_to_number, HOUR
+from db import get_all_watch_entries, watchlist_collection
 
 async def watch_background(bot, watch_list):
     while True:
         await asyncio.sleep(12 * HOUR)
-        for user_id, items in watch_list.items():
+        for doc in get_all_watch_entries():
+            user_id = doc["user_id"]
+            items = doc.get("items", [])
             for item in items:
                 price_today = get_price(item["link"])
                 price_today_float = convert_price_to_number(price_today)
