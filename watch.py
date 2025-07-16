@@ -4,7 +4,7 @@ from amazon import get_price
 from utils import convert_price_to_number, HOUR
 from db import get_all_watch_entries, watchlist_collection
 
-async def watch_background(bot, watch_list):
+async def watch_background(bot):
     while True:
         await asyncio.sleep(12 * HOUR)
         for doc in get_all_watch_entries():

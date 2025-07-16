@@ -24,7 +24,6 @@ bot = commands.Bot(command_prefix=('/'), intents=intents)
 
 # Dict for storing results
 search_results = {}
-watch_list = {}
 
 
 # Commands
@@ -90,7 +89,7 @@ async def wp_unwatch(ctx, choice_number: int = None):
 @bot.event
 async def on_ready():
     print(f"{bot.user} is ready and online!")
-    bot.loop.create_task(watch_background(bot, watch_list))
+    bot.loop.create_task(watch_background(bot))
     await bot.sync_commands()
 
 bot.run(token)
