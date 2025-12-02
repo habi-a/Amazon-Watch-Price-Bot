@@ -15,7 +15,7 @@ cp "$configFile" bot.config
 sed -i "s/\(tokenBot=\).*/\1$tokenBot/" bot.config
 
 sudo apt-get update
-sudo apt-get install -y python3 python3-pip curl nodejs npm gcc g++ make gnupg
+sudo apt-get install -y python3 python3-pip python3-venv curl nodejs npm gcc g++ make gnupg
 
 # Mongo
 curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
